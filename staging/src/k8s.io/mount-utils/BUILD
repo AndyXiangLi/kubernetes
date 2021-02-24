@@ -80,6 +80,7 @@ go_test(
         "mount_linux_test.go",
         "mount_test.go",
         "mount_windows_test.go",
+        "resizefs_linux_test.go",
         "safe_format_and_mount_test.go",
     ],
     embed = [":go_default_library"],
