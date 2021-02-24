@@ -251,7 +251,7 @@ func TestNeedResize(t *testing.T) {
 			deviceSize:   "2048",
 			cmdOutputFsType:  "TYPE=ntfs",
 			expectError: true,
-			expectResult: false,
+			expectResult: true,
 		},
 	}
 
