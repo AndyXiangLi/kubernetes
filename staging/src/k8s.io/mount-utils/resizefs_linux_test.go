@@ -233,3 +233,52 @@ Journal checksum:         0xb7df3c6e
 		})
 	}
 }
+
+func TestNeedResize(t *testing.T) {
+	testcases := []struct {
+		name        string
+		devicePath  string
+		deviceMountPath  string
+		deviceSize   string
+		cmdOutputFsType   string
+		expectError bool
+		expectResult bool
+	}{
+		{
+			name:        "False - Unsupported fs type",
+			devicePath:  "/dev/test1",
+			deviceMountPath:  "/mnt/test1",
+			deviceSize:   "2048",
+			cmdOutputFsType:  "TYPE=ntfs",
+			expectError: true,
+			expectResult: false,
+		},
+	}
+
+	for _, test := range testcases {
+		t.Run(test.name, func(t *testing.T) {
+			fcmd := fakeexec.FakeCmd{
+				CombinedOutputScript: []fakeexec.FakeAction{
+					func() ([]byte, []byte, error) { return []byte(test.deviceSize), nil, nil },
+					func() ([]byte, []byte, error) { return []byte(test.cmdOutputFsType), nil, nil },
+				},
+			}
+			fexec := fakeexec.FakeExec{
+				CommandScript: []fakeexec.FakeCommandAction{
+					func(cmd string, args ...string) exec.Cmd { return fakeexec.InitFakeCmd(&fcmd, cmd, args...) },
+					func(cmd string, args ...string) exec.Cmd { return fakeexec.InitFakeCmd(&fcmd, cmd, args...) },
+				},
+			}
+			resizefs := ResizeFs{exec: &fexec}
+
+
+			needResize, err := resizefs.NeedResize(test.devicePath, test.deviceMountPath)
+			if needResize != test.expectResult {
+				t.Fatalf("Expect result is %v but got %v", test.expectResult, needResize)
+			}
+			if !test.expectError && err != nil {
+				t.Fatalf("Expect no error but got %v", err)
+			}
+		})
+	}
+}

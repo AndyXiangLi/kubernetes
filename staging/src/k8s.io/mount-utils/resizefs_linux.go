@@ -154,14 +154,14 @@ func (resizefs *ResizeFs) getExtSize(devicePath string) (uint64, uint64, error) 
 		if len(tokens) != 2 {
 			continue
 		}
-		key, value := strings.TrimSpace(tokens[0]), strings.TrimSpace(tokens[1])
-		if key == "Block count" {
+		key, value := strings.ToLower(strings.TrimSpace(tokens[0])), strings.ToLower(strings.TrimSpace(tokens[1]))
+		if key == "block count" {
 			blockCount, err = strconv.ParseUint(value, 10, 64)
 			if err != nil {
 				return 0, 0, fmt.Errorf("failed to parse block count %s: %s", value, err)
 			}
 		}
-		if key == "Block size" {
+		if key == "block size" {
 			blockSize, err = strconv.ParseUint(value, 10, 64)
 			if err != nil {
 				return 0, 0, fmt.Errorf("failed to parse block size %s: %s", value, err)
