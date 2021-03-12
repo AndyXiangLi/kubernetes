@@ -179,7 +179,7 @@ Journal checksum:         0xb7df3c6e
 			name:        "success parse xfs info",
 			devicePath:  "/dev/test1",
 			blocksize:   4096,
-			blockCount:  5242880,
+			blockCount:  1835008,
 			cmdOutput:   cmdOutputSuccessXfs,
 			expectError: false,
 			fsType:      "xfs",
